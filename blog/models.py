@@ -26,20 +26,23 @@ class Post(models.Model):
     author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE, verbose_name='Автор')
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     image = models.ImageField(upload_to='articles/', verbose_name='Картинка')
-    text = models.TextField()
-    category = models.ForeignKey(Category, related_name='post', on_delete=models.SET_NULL, null=True)
-    tags = models.ManyToManyField(Tag, related_name='post')
+    text = models.TextField(verbose_name='Текст')
+    category = models.ForeignKey(Category, related_name='post', on_delete=models.SET_NULL, null=True, verbose_name='Категория')
+    tags = models.ManyToManyField(Tag, related_name='post', verbose_name='Тег')
     create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):   #Отображаем родителя в админке
+        return self.title[0:16]
 
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
-    serves = models.CharField(max_length=50)
-    prep_time = models.PositiveIntegerField(default=0)
-    cook_time = models.PositiveIntegerField(default=0)
-    ingredients = models.TextField()
-    directions = models.TextField()
-    post = models.ForeignKey(Post, related_name='recipe', on_delete=models.SET_NULL, null=True, blank=True)
+    serves = models.CharField(max_length=50, verbose_name='Подача')
+    prep_time = models.PositiveIntegerField(default=0, verbose_name='Время подготовки')
+    cook_time = models.PositiveIntegerField(default=0, verbose_name='Время приготовления')
+    ingredients = models.TextField(verbose_name='Ингредиенты')
+    directions = models.TextField(verbose_name='Описание')
+    post = models.ForeignKey(Post, related_name='recipe', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Пост')
 
 
 class Comment(models.Model):
