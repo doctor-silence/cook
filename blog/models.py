@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 
 class Category(MPTTModel):
@@ -30,9 +31,13 @@ class Post(models.Model):
     category = models.ForeignKey(Category, related_name='post', on_delete=models.SET_NULL, null=True, verbose_name='Категория')
     tags = models.ManyToManyField(Tag, related_name='post', verbose_name='Тег')
     create_at = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(max_length=200, default='')
 
     def __str__(self):   #Отображаем родителя в админке
         return self.title[0:16]
+
+    def get_absolute_url(self):
+        return reverse("post_single", kwargs={"slug": self.category.slug, "post_slug": self.slug})
 
 
 class Recipe(models.Model):
@@ -43,6 +48,7 @@ class Recipe(models.Model):
     ingredients = models.TextField(verbose_name='Ингредиенты')
     directions = models.TextField(verbose_name='Описание')
     post = models.ForeignKey(Post, related_name='recipe', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Пост')
+
 
 
 class Comment(models.Model):
