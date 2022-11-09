@@ -39,6 +39,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse("post_single", kwargs={"slug": self.category.slug, "post_slug": self.slug})
 
+    def get_recipes(self):
+        return self.recipes.all()
+
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
@@ -47,7 +50,7 @@ class Recipe(models.Model):
     cook_time = models.PositiveIntegerField(default=0, verbose_name='Время приготовления')
     ingredients = models.TextField(verbose_name='Ингредиенты')
     directions = models.TextField(verbose_name='Описание')
-    post = models.ForeignKey(Post, related_name='recipe', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Пост')
+    post = models.ForeignKey(Post, related_name='recipes', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Пост')
 
 
 
