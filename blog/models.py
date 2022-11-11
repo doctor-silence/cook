@@ -3,6 +3,9 @@ from django.db import models
 from django.urls import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 
+
+from ckeditor.fields import RichTextField
+
 class Category(MPTTModel):
     name = models.CharField(max_length=100, verbose_name='Название')
     slug = models.SlugField(max_length=100)
@@ -48,8 +51,8 @@ class Recipe(models.Model):
     serves = models.CharField(max_length=50, verbose_name='Подача')
     prep_time = models.PositiveIntegerField(default=0, verbose_name='Время подготовки')
     cook_time = models.PositiveIntegerField(default=0, verbose_name='Время приготовления')
-    ingredients = models.TextField(verbose_name='Ингредиенты')
-    directions = models.TextField(verbose_name='Описание')
+    ingredients = RichTextField()
+    directions = RichTextField()
     post = models.ForeignKey(Post, related_name='recipes', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Пост')
 
 
